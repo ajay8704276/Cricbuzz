@@ -21,14 +21,19 @@ class RestaurentViewModel constructor(
 ) : ViewModel() {
 
 
+    /**
+     * Mutable list of updated restaurent data menu response
+     */
     lateinit var mutableListRestaurants: MutableList<Restaurants>
 
+    //Error to show the message
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String>
         get() {
             return _errorMessage
         }
 
+    //Mutable live data of restaurant date
     val _restaurentList = MutableLiveData<List<Restaurants>>()
     /*val restaurentList: LiveData<RestaurentResponse>
         get() {
@@ -37,14 +42,18 @@ class RestaurentViewModel constructor(
 
 
 
+    //Boolean to handle the login state
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() {
             return _loading
         }
 
+    //Job to handle the cancellation of the coroutines
     var job = Job()
 
+
+    //Coroutines of exception handling
     val handler = CoroutineExceptionHandler { _, exception ->
         println("Exception ajay  $exception")
     }
@@ -52,11 +61,24 @@ class RestaurentViewModel constructor(
     //define coroutine scope
     val coroutineScope = CoroutineScope(Dispatchers.IO + job)
 
+    /**
+     * function to fetch the restaurant data from json file from asset
+     *
+     * and
+     *
+     * to fetch the menus data from json file from asset
+     *
+     * merge the menus data into the restaurent data to perform filtering
+     */
     fun getRestaurantsAndMenu() {
 
         try {
             coroutineScope.launch {
 
+
+                /**
+                 * Parsing restaurant json
+                 */
                 val response = ParseJson.getJsonFromAssets(
                     context,
                     "restaurent.json"
@@ -68,6 +90,9 @@ class RestaurentViewModel constructor(
                 val restaurents = gson1.fromJson<RestaurentResponse>(response, restaurentResponse)
                 mutableListRestaurants = restaurents.restaurants as MutableList<Restaurants>
 
+                /**
+                 * Parsing menus json
+                 */
                 val response1 =
                     ParseJson.getJsonFromAssets(context, "menus.json")
                 val gson = Gson()
@@ -75,6 +100,10 @@ class RestaurentViewModel constructor(
 
                 val menus = gson.fromJson<MenuResponse>(response1, menuResponse)
 
+
+                /**
+                 * Merging both restaurant and menus data into restaurant
+                 */
                 if (restaurents != null) {
                     //parseMenu().join()
                     var menuList = menus.menus
@@ -90,6 +119,9 @@ class RestaurentViewModel constructor(
                         }
                     }
                 }
+                /**
+                 * updating restaurant with post value t
+                 */
                 withContext(Dispatchers.Main) {
                     _restaurentList.postValue(mutableListRestaurants)
                 }

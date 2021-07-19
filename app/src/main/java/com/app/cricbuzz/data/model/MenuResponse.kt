@@ -2,7 +2,9 @@ package com.app.cricbuzz.data.model
 
 import com.google.gson.annotations.SerializedName
 
-
+/**
+ * Menu response object data class
+ */
 data class MenuResponse(
     @SerializedName("menus") var menus: List<Menus>
 )

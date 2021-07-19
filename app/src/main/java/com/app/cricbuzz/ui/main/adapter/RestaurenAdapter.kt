@@ -11,6 +11,12 @@ import com.app.cricbuzz.R
 import com.app.cricbuzz.data.model.Restaurants
 import com.app.cricbuzz.utils.snackbar
 
+/**
+ * Adapter class to show the data in recycler view
+ *
+ * Perform search operation based on string input
+ *
+ */
 class RestaurenAdapter(restaurantData: List<Restaurants>) :
     RecyclerView.Adapter<RestaurenAdapter.RestaurantViewHolder>(), Filterable {
 
@@ -58,6 +64,15 @@ class RestaurenAdapter(restaurantData: List<Restaurants>) :
         return restaurantFilter
     }
 
+    /**
+     * Performing filtering of object
+     *
+     * 1 - based on menu items present in menu response then show the restaurant
+     *
+     * 2 - based on cusine type / restaurant name present in restaurant response
+     *
+     * then show the restaurant associated with it
+     */
     private val restaurantFilter: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filteredList: MutableList<Restaurants> = ArrayList<Restaurants>()
@@ -98,6 +113,9 @@ class RestaurenAdapter(restaurantData: List<Restaurants>) :
             return results
         }
 
+        /**
+         * Publish the filtered result on main thread
+         */
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             restaurantList.clear()
             restaurantList = if (results == null || results.values == null)

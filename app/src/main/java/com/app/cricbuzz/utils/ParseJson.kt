@@ -4,6 +4,10 @@ import android.content.Context
 import java.io.IOException
 import java.io.InputStream
 
+
+/**
+ * Object responsible for parsing of data
+ */
 object ParseJson {
 
     fun getJsonFromAssets(context: Context, fileName: String?): String? {
