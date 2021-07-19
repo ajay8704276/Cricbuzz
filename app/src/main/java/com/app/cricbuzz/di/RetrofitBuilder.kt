@@ -1,10 +1,14 @@
-package com.app.cricbuzz.data.api
+package com.app.cricbuzz.di
 
 import android.content.Context
-import okhttp3.*
+import com.app.cricbuzz.data.api.ApiService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
+import javax.inject.Singleton
 
 
 /**
@@ -12,6 +16,9 @@ import java.io.IOException
  *
  * to access the restaurant api service
  */
+
+@Module
+@InstallIn(SingletonComponent::class)
 object RetrofitBuilder {
 
     // Mock base URL using Moockoon app
@@ -21,7 +28,9 @@ object RetrofitBuilder {
     /**
      * Get the retrofit object
      */
-    private fun getRetrofit(context: Context):Retrofit{
+    @Singleton
+    @Provides
+    fun getRetrofit():Retrofit{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -32,8 +41,10 @@ object RetrofitBuilder {
     /**
      * Return the retrofit api service instance
      */
-    fun getRetrofitInstance(context: Context):ApiService{
-        var apiService = getRetrofit(context).create(ApiService::class.java)
+    @Singleton
+    @Provides
+    fun getRetrofitInstance(): ApiService {
+        var apiService = getRetrofit().create(ApiService::class.java)
         return apiService
     }
 

@@ -5,29 +5,31 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.cricbuzz.R
-import com.app.cricbuzz.data.api.ApiHelper
-import com.app.cricbuzz.data.api.RetrofitBuilder
 import com.app.cricbuzz.ui.main.adapter.RestaurenAdapter
 import com.app.cricbuzz.ui.main.viewmodel.RestaurentViewModel
-import com.app.cricbuzz.ui.main.viewmodel.RestaurentViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: RestaurentViewModel
+    /**
+     * Using hilt to intialize RestaurentViewModel using dependency injection by viewModels()
+     */
+    private val viewModel: RestaurentViewModel by viewModels()
     private lateinit var adapter: RestaurenAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupViewModel()
+        //setupViewModel()
         setupObserver()
 
     }
@@ -81,15 +83,22 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(
-            this,
-            RestaurentViewModelFactory(
-                ApiHelper(RetrofitBuilder.getRetrofitInstance(this)),
-                this
-            )
-        ).get(RestaurentViewModel::class.java)
-    }
+    /**
+     * Commenting this setup view model as using hilt dependency injection
+     *
+     * Removing RestaurentViewModelFactory class as this class not needed any more
+     *
+     * Dependency to ViewModel constructor is provided through hilt dependency injection
+     *
+     */
+    /* private fun setupViewModel() {
+         viewModel = ViewModelProviders.of(
+             this,
+             RestaurentViewModelFactory(
+                 ApiHelper(RetrofitBuilder.getRetrofitInstance(this)),
+                 this
+             )
+         ).get(RestaurentViewModel::class.java)
+     }*/
 }
 

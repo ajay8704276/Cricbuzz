@@ -7,19 +7,22 @@ import androidx.lifecycle.ViewModel
 import com.app.cricbuzz.data.model.MenuResponse
 import com.app.cricbuzz.data.model.Restaurants
 import com.app.cricbuzz.data.model.RestaurentResponse
-import com.app.cricbuzz.data.repository.MainRespository
 import com.app.cricbuzz.utils.ParseJson
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import java.lang.reflect.Type
+import javax.inject.Inject
 
 
-class RestaurentViewModel constructor(
-    private val mainRespository: MainRespository,
-    private val context: Context
+@HiltViewModel
+class RestaurentViewModel @Inject constructor(
+    @ApplicationContext  context: Context
 ) : ViewModel() {
 
+    var mContext :Context = context
 
     /**
      * Mutable list of updated restaurent data menu response
@@ -80,7 +83,7 @@ class RestaurentViewModel constructor(
                  * Parsing restaurant json
                  */
                 val response = ParseJson.getJsonFromAssets(
-                    context,
+                    mContext,
                     "restaurent.json"
                 )
 
@@ -94,7 +97,7 @@ class RestaurentViewModel constructor(
                  * Parsing menus json
                  */
                 val response1 =
-                    ParseJson.getJsonFromAssets(context, "menus.json")
+                    ParseJson.getJsonFromAssets(mContext, "menus.json")
                 val gson = Gson()
                 val menuResponse: Type = object : TypeToken<MenuResponse?>() {}.type
 
